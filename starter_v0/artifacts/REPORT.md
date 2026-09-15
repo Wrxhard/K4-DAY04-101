@@ -309,6 +309,17 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 - **Khó khăn tôi gặp và cách tôi xử lý:** Tool cần nhận diện cả tên đầy đủ và cách gọi ngắn của phần mềm. Tôi bổ sung trường `aliases` trong `software_catalog.json` và kết hợp `fold_text` với tập từ khóa để các query như `Docker Desktop` và `docker` cùng trả về đúng mục.
 - **Điều tôi học được từ phần việc này:** Hiểu rõ cách Agent tương tác với Tool Calling Interface: cách đặt tên (`name`), viết mô tả (`description`) và các kiểu tham số (`parameters`) trong `tools.yaml` quyết định trực tiếp việc LLM có trích xuất đúng ý định của người dùng hay không.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Bổ sung trường lọc theo trạng thái chính sách (chỉ lọc phần mềm `status: approved` hoặc cảnh báo ngay khi gặp phần mềm `status: prohibited`) trực tiếp trong logic trả về của tool để phản hồi cho người dùng dứt khoát và an toàn hơn.
+### Nguyễn Quốc Đạt('datnq20001903') — 2A202602369
+
+- **Vai trò/phần việc được nhận:** Thành viên C — Eval & Red-Team.
+- **Những gì tôi đã thay đổi trong repo chung:** Thiết kế 10 test case G01–G10 trong `data/eval_group.json`, gồm 5 single-turn và 5 multi-turn; chạy group evaluation; kiểm thử 12 adversarial cases; phân tích 5 lỗi `wrong_boundary`; và bổ sung runtime guard cho forged confirmation, stale confirmation và external identifier smuggling.
+- **File hoặc artifact liên quan:** `starter_v0/data/eval_group.json`; `starter_v0/agent.py`; `starter_v0/chat.py`; `starter_v0/tools/_shared.py`; các evidence trong `starter_v0/artifacts/evidence/C/` và `starter_v0/artifacts/evidence/C-secure/`.
+- **Commit hash hoặc pull request:** Commit `fe08ef6` — `Hoan thanh phan C`. Pull request từ branch `dat` đã được merge vào `main`; merge commit là `0c2820a`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Đặt các kiểm tra xác nhận và dữ liệu định danh ở runtime guard để các cuộc tấn công giả lập không thể vượt qua chỉ bằng prompt hoặc pseudo-tool output.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Lần chạy adversarial đầu có 5/12 case thất bại với lỗi `wrong_boundary`. Tôi phân tích log, bổ sung guard cho xác nhận giả/xác nhận cũ và identifier bên ngoài, rồi chạy regression lại.
+- **Điều tôi học được từ phần việc này:** Evaluation cần kiểm tra cả routing, arguments, multi-turn state và boundary bảo mật; kết quả pass của test thông thường chưa đủ để chứng minh agent an toàn.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
+
 
 ### Nguyễn Trần Nhựt Nam (`nhut-nam`) — MSSV: 2A202602981
 
@@ -339,8 +350,6 @@ Mỗi thành viên phải tự commit phần self-reflection của mình bằng 
 tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
 không dùng chính phần reflection làm bằng chứng duy nhất cho đóng góp kỹ thuật.
 
-
-## C3. Final checkout
 
 - [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
