@@ -263,7 +263,21 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
 
 
-> Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
+### Nguyễn Trần Nhựt Nam (`nhut-nam`) — MSSV: 2A202602981
+
+- **Vai trò/phần việc được nhận:** Tôi phụ trách vai trò B: Setup provider/preflight; làm PIC chính cho 2 case lỗi về arguments/schema (`H13_parallel_status_and_device`, `H17_triage_with_three_sources`); quản lý file `artifacts/tools.yaml` và hỗ trợ đồng bộ tool schema/registry.
+- **Những gì tôi đã thay đổi trong repo chung:**
+  - Chuẩn hóa schema các tool trong `tools.yaml`, đặc biệt cấu hình tham số `check` thành bắt buộc (`required: [asset_id, check]`) trong `inspect_device` để ép model luôn chỉ định rõ diagnostic scope (`vpn`, `network`,...) thay vì bỏ sót.
+  - Tinh chỉnh `search_kb` (`required: []`) để hỗ trợ tra cứu linh hoạt theo danh mục mà không ép buộc query trống.
+  - Phối hợp resolve merge conflict và đồng bộ schema các tool mới (như `approved_software_catalog`) trên nhánh `main`.
+- **File hoặc artifact liên quan:** `starter_v0/artifacts/tools.yaml`, `starter_v0/artifacts/REPORT.md`.
+- **Commit hash hoặc pull request:** `31820c5`, `3d8d400`, `f064e49`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi quyết định đưa tham số `check` vào danh sách `required: [asset_id, check]` của `inspect_device`. Ở baseline v0, `check` không bắt buộc và có default là `"all"`, dẫn đến model thường xuyên bỏ qua hoặc chọn sai phạm vi chẩn đoán khi gặp sự cố VPN chuyên biệt (như trong case `H13` và `H17`). Việc quy định required ở schema giúp model bắt buộc phải trích xuất đúng argument ngay từ tầng định nghĩa tool calling.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Việc thay đổi schema trong `tools.yaml` nếu không cẩn thận có thể ảnh hưởng đến các case khác hoặc gây conflict với phần prompt mà thành viên khác đang sửa. Tôi đã kiểm tra kỹ cấu trúc schema, giữ các mô tả ngắn gọn súc tích và chủ động resolve merge conflict giữa branch cá nhân và `main`.
+- **Điều tôi học được từ phần việc này:** Hiểu rõ sức mạnh của Tool Calling Schema (JSON Schema). Tinh chỉnh schema (required fields, enum, mô tả tham số) đóng vai trò như một "hàng rào bảo vệ" cấu trúc cực kỳ hiệu quả, bổ trợ trực tiếp cho Prompt Engineering mà không cần nhồi nhét quá nhiều câu lệnh dài dòng vào system prompt.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ xây dựng thêm các script validate schema tự động sớm hơn để kiểm tra tính tương thích giữa `tools.yaml`, `tools/__init__.py` và các bộ test case ngay khi có thay đổi.
+
+> Các thành viên C và D vẫn phải tự viết và commit self-reflection của mình bằng
 > Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
 > các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
