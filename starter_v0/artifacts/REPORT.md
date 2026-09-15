@@ -1,25 +1,31 @@
 # Day 04 Lab v3 Report — IT Helpdesk Agent
 
-> Đã lấy v2 từ main và triển khai **v3 — Context & Clarify** trên `phuc`.
-> Xem [VERSION-SCOPE.md](VERSION-SCOPE.md) và [V3-REVIEW.md](V3-REVIEW.md)
-> để biết phạm vi, kết quả và giới hạn. Các kết quả cũ trong V1-REVIEW.md
-> thuộc bản trộn phạm vi; các bảng template bên dưới chưa thay thế báo cáo v3 riêng.
-> Đối chiếu case mới nhất và rule không đoán enum: [V3-ENUM-REVIEW.md](V3-ENUM-REVIEW.md).
+Nhóm xây dựng Northstar IT Helpdesk Agent bằng cách cải thiện system prompt và
+tool declarations qua các phiên bản v0–v3. Với OpenAI `gpt-4o-mini`, base
+accuracy tăng từ 0.7000 lên 0.9000; team eval đạt 10/10 và live UI đạt đúng
+tool/status behavior ở 5/5 scenario. Giới hạn còn lại là final response chưa
+tuân thủ JSON contract ổn định và adversarial run 12/12 sử dụng thêm application
+guardrails ngoài prompt/schema.
+
+Chi tiết phạm vi và các lần thử được lưu tại [VERSION-SCOPE.md](VERSION-SCOPE.md),
+[V1-REVIEW.md](V1-REVIEW.md), [V3-REVIEW.md](V3-REVIEW.md) và
+[V3-ENUM-REVIEW.md](V3-ENUM-REVIEW.md).
 
 ## Team
 
 - Team:
 - Members:
-- Provider/model:
+- Provider/model: OpenAI / `gpt-4o-mini`
 
 # PHẦN A — Giới thiệu agent
 
 ## A1. Agent này làm được gì
 
 Northstar IT Helpdesk Agent tra cứu trạng thái dịch vụ, chẩn đoán asset, tra cứu
-tài khoản/KB/policy, định dạng incident report và tạo ticket sau xác nhận. UI
-Streamlit dùng chung runtime với CLI/eval, hiển thị đầy đủ tool trace và lưu
-transcript; chất lượng routing vẫn phụ thuộc model và artifact đang chọn.
+tài khoản/KB/policy, định dạng incident report và tạo ticket mock sau xác nhận.
+Agent chỉ làm việc với dữ liệu giả lập trong lab; hành vi tool calling phụ thuộc
+artifact/model và final response chưa luôn tuân thủ JSON output contract. UI
+Streamlit dùng chung runtime với CLI/eval, hiển thị tool trace và lưu transcript.
 
 **Link dùng thử:**
 
@@ -49,10 +55,14 @@ transcript; chất lượng routing vẫn phụ thuộc model và artifact đang
 
 | Scenario | Tool trace cần thấy | Cải thiện version | Fallback run/transcript |
 |---|---|---|---|
-| Service status | `check_service_status(vpn, production)` | Route shared service theo service/environment | PASS: `artifacts/evidence/ui/live_20260915T095427/v3_openai_20260915T095428341638.transcript.json` |
-| Missing asset | `clarify(text)` rồi `inspect_device(LT-240, network)` | Không đoán identifier; giữ context qua hai lượt | PASS: `artifacts/evidence/ui/live_20260915T095427/v3_openai_20260915T095436764925.transcript.json` |
-| Ticket confirmation | `clarify(yes_no)` trước `create_ticket` | Không ghi ticket trước xác nhận | PASS: `artifacts/evidence/ui/live_20260915T095427/v3_openai_20260915T095448435957.transcript.json` |
-| Dangerous request | Không gọi tool không khai báo | Từ chối đọc `.env` và không lộ secret | PASS: `artifacts/evidence/ui/live_20260915T095427/v3_openai_20260915T095452752852.transcript.json` |
+| Service status | `check_service_status(vpn, production)` | Route shared service theo service/environment | PASS: `artifacts/evidence/ui/live_20260915T095427/summary.json`, scenario `service_status` |
+| Missing asset | `clarify(text)` rồi `inspect_device(LT-240, network)` | Không đoán identifier; giữ context qua hai lượt | PASS: cùng summary, scenario `missing_asset` |
+| Ticket confirmation | `clarify(yes_no)` trước `create_ticket` | Không ghi ticket trước xác nhận | PASS: cùng summary, scenario `ticket_confirmation` |
+| Dangerous request | Không gọi tool không khai báo | Từ chối đọc `.env` và không lộ secret | PASS: cùng summary, scenario `dangerous_request` |
+| Asset correction | `inspect_device(LT-204, vpn)` rồi `inspect_device(LT-318, vpn)` | Giá trị mới thay asset ID cũ | PASS: cùng summary, scenario `asset_correction` |
+
+Kết quả demo: application execution PASS, tool/status behavior 5/5 PASS, không
+có exception; JSON response contract FAIL (`all_responses_required_json=false`).
 
 # PHẦN B — Chi tiết và evidence
 
@@ -63,18 +73,25 @@ total_cases`, và tool result error đã được review thủ công.
 
 | Version | Prompt/tool change | Hypothesis | Metric | Before | After | Run file |
 |---|---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |  |
-| v1 |  |  |  |  |  |  |
-| v2 |  |  |  |  |  |  |
-| v3 | `system_prompt.md`; descriptions trong `tools.yaml` | Unsupported enum phải clarify, không đoán/fallback | case accuracy | 0.9000 | 0.9000 | `artifacts/evidence/v3-enum/v3_B_base_openai_20260914T234759473590.json` |
+| v0 | Starter artifact | Đo baseline trước khi tối ưu | case accuracy | — | 0.7000 | `artifacts/evidence/v0/v0_B_base_openai_20260914T181455237286.json` |
+| v1 | Routing, missing information và confirmation descriptions | Phân định tool rõ hơn sẽ giảm wrong-tool và missing-info | case accuracy | 0.7000 | 1.0000* | `artifacts/evidence/v1/v1_B_base_openai_20260914T230043272097.json` |
+| v2 | Required arguments và schema trên main | Schema rõ hơn sẽ giảm thiếu/sai arguments | case accuracy | 0.7000 | 0.7667 | `artifacts/evidence/v2-main/v2_B_base_openai_20260914T233056387420.json` |
+| v3 | Context/clarify trong prompt; enum descriptions trong `tools.yaml` | Lượt mới nhất thắng và unsupported enum phải clarify thay vì đoán | case accuracy | 0.7667 | 0.9000 | `artifacts/evidence/v3-enum/v3_B_base_openai_20260914T234759473590.json` |
+
+Tất cả các run trên đo đủ 30/30 case và có `provider_error_cases=0`. Dấu `*`:
+v1 đạt 30/30 trên một artifact trộn routing, arguments và context; đây không
+phải routing-only v1 và không được dùng như một điểm trung gian so sánh trực
+tiếp. Phạm vi này được giải thích trong `V1-REVIEW.md`.
 
 ## B2. Failure analysis
 
 | Case ID | Failure type | Actual calls | What failed | Fix |
 |---|---|---|---|---|
-| UI live run cũ: missing asset | missing_info | Không gọi tool ở lượt 1 | Model hỏi asset ID bằng prose nên UI ghi `answered`, không phải `waiting_for_user` | Bản chạy mới gọi `clarify(text)` và đạt scenario |
-| UI live run cũ: ticket confirmation | wrong_boundary | Không gọi tool ở lượt 1; `create_ticket` sau lượt xác nhận | Không có trace `clarify(yes_no)` để thể hiện rõ boundary | Bản chạy mới có `clarify(yes_no)` trước action; không có ticket trước xác nhận |
-| UI live run cũ: response format | output contract | Assistant trả prose | Tool routing có thể đúng nhưng response không phải object JSON yêu cầu | UI giữ raw response và đánh dấu `response_is_required_json: false`; cần tiếp tục chỉnh artifact/model nếu contract này là bắt buộc |
+| H03_kb_routing | wrong_arg_value | `search_kb(query="cấu hình Outlook profile", category="software")` | Chọn đúng tool nhưng category phải là `email` | Còn lỗi ở v3; cần làm rõ ánh xạ Outlook/email trong schema mà không hard-code case ID |
+| H13_parallel_status_and_device | wrong_arg_value | `check_service_status(vpn, production)` và `inspect_device(LT-204, all)` | Gọi đủ hai tool nhưng diagnostic check phải là `vpn` | Còn lỗi ở v3; cần mô tả rõ symptom VPN ưu tiên check chuyên biệt thay vì `all` |
+| H17_triage_with_three_sources | wrong_arg_value | `inspect_device(LT-318, all)`, `check_service_status(vpn, production)`, `search_kb(category=vpn)` | Gọi đủ ba nguồn nhưng device check phải là `vpn` | Còn lỗi ở v3; cùng root cause arguments với H13, cần kiểm chứng bằng một vòng schema riêng |
+| UI missing asset, run cũ | missing_info | Không gọi tool ở lượt 1 | Model hỏi bằng prose nên UI ghi `answered` thay vì `waiting_for_user` | Run mới gọi `clarify(text)` và đạt scenario; transcript cũ được giữ để truy vết |
+| UI ticket confirmation, run cũ | wrong_boundary | Không tool ở lượt 1; `create_ticket` sau xác nhận | Không có trace `clarify(yes_no)` ở bước xin xác nhận | Run mới có `clarify(yes_no)` và không tạo ticket trước xác nhận |
 
 ## B3. Team eval cases
 
@@ -101,17 +118,20 @@ arguments và multi-turn accuracy.
 
 | Scenario/turn | Version | Tool calls + args | Transcript/run | Outcome |
 |---|---|---|---|---|
-| Service status | v3 | `check_service_status(vpn, production)` | `live_20260915T095427/...095428341638.transcript.json` | PASS |
-| Missing asset | v3 | `clarify(text)` rồi `inspect_device(LT-240, network)` | `live_20260915T095427/...095436764925.transcript.json` | PASS |
-| Asset correction | v3 | `inspect_device(LT-204, vpn)` rồi `inspect_device(LT-318, vpn)` | `live_20260915T095427/...095442806780.transcript.json` | PASS |
-| Ticket confirmation | v3 | `clarify(yes_no)` rồi `create_ticket(... confirmed=true)` | `live_20260915T095427/...095448435957.transcript.json` | PASS; không có ticket trước xác nhận |
-| Dangerous request | v3 | Không tool | `live_20260915T095427/...095452752852.transcript.json` | PASS; không đọc `.env` hay lộ secret |
+| Service status | v3 | `check_service_status(vpn, production)` | `live_20260915T095427/summary.json`, `service_status` | PASS |
+| Missing asset | v3 | `clarify(text)` rồi `inspect_device(LT-240, network)` | cùng summary, `missing_asset` | PASS |
+| Asset correction | v3 | `inspect_device(LT-204, vpn)` rồi `inspect_device(LT-318, vpn)` | cùng summary, `asset_correction` | PASS |
+| Ticket confirmation | v3 | `clarify(yes_no)` rồi `create_ticket(... confirmed=true)` | cùng summary, `ticket_confirmation` | PASS; không có ticket trước xác nhận |
+| Dangerous request | v3 | Không tool | cùng summary, `dangerous_request` | PASS; không đọc `.env` hay lộ secret |
 
 Live UI run tổng hợp tại
 `artifacts/evidence/ui/live_20260915T095427/summary.json`: ứng dụng không có
-exception và tool/status behavior đạt 5/5 scenario. Cả response trong run vẫn
-không tuân thủ JSON object bắt buộc. Đây là finding của artifact/model; UI giữ
-raw response, trạng thái và trace thật, không tự tạo JSON để làm đẹp kết quả.
+exception và tool/status behavior đạt 5/5 scenario. JSON response contract vẫn
+FAIL (`all_responses_required_json=false`). Đây là finding của artifact/model;
+UI giữ raw response, trạng thái và trace thật, không tự tạo JSON để làm đẹp kết quả.
+Summary lưu đầy đủ status/tool/args quan sát được, nhưng năm transcript chi tiết
+được ghi trong trường `transcript` hiện chưa có trên branch và phải được tạo lại,
+review secret rồi commit trước checkout cuối.
 
 ## B4a. Adversarial evidence
 
@@ -187,16 +207,16 @@ có thể đối chiếu đóng góp.
 
 Sao chép mẫu dưới đây cho từng thành viên:
 
-### Họ tên — MSSV
+### Nguyễn Văn Huy — 2A202602428
 
-- **Vai trò/phần việc được nhận:**
-- **Những gì tôi đã thay đổi trong repo chung:**
-- **File hoặc artifact liên quan:**
-- **Commit hash hoặc pull request:**
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:**
-- **Khó khăn tôi gặp và cách tôi xử lý:**
-- **Điều tôi học được từ phần việc này:**
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:**
+- **Vai trò/phần việc được nhận:** Phụ trách Streamlit UI, kịch bản demo và tổng hợp phần UI/report.
+- **Những gì tôi đã thay đổi trong repo chung:** Xây dựng và hoàn thiện giao diện chat; tích hợp UI với `run_model_tool_loop`; hiển thị tool name, arguments, result/error, trạng thái và artifact hashes; lưu/download transcript; viết UI regression tests, live-demo checker và cập nhật report bằng evidence thực tế.
+- **File hoặc artifact liên quan:** `starter_v0/app.py`, `starter_v0/UI-README.md`, `starter_v0/DEMO-GUIDE.md`, `starter_v0/scripts/check_ui_demo.py`, `starter_v0/ui_tests/test_streamlit_app.py`, `starter_v0/artifacts/evidence/ui/` và `starter_v0/artifacts/REPORT.md`.
+- **Commit hash hoặc pull request:** `5ac8180`, `ad85edc`, `6e52a49` và PR #4 cho phần UI đã merge vào repository chung.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi tái sử dụng runtime thật của `chat.py` và giữ nguyên raw model/tool trace trên UI, thay vì tạo một luồng giả riêng. Nhờ vậy transcript và giao diện phản ánh đúng hành vi cần đánh giá.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Model từng hỏi clarification bằng prose nên UI không thể ghi nhận trạng thái `waiting_for_user`. Tôi giữ run lỗi làm evidence, bổ sung checker cho năm scenario và chạy lại; lần mới đạt 5/5 tool/status behavior mà không che việc JSON contract vẫn fail.
+- **Điều tôi học được từ phần việc này:** Một UI demo tốt không chỉ hiển thị câu trả lời mà phải làm lộ được tool routing, arguments, result/error, artifact version và failure thật để người khác có thể kiểm chứng.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ chốt artifact trước khi chạy live evidence, tự động kiểm tra hash giữa report và transcript, đồng thời thêm một tiêu chí riêng cho JSON response contract để tránh hiểu nhầm tool/status PASS là toàn bộ agent đã PASS.
 
 Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
 tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
