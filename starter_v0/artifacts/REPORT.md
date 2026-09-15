@@ -133,18 +133,18 @@ repository chung. Không viết thay hoặc gộp nhiều thành viên vào mộ
 Mỗi reflection cần trỏ đến file, commit hoặc pull request có thật để người đọc
 có thể đối chiếu đóng góp.
 
-Sao chép mẫu dưới đây cho từng thành viên:
 
-### Họ tên — MSSV
+### Nguyễn Quốc Đạt — 2A202602369
 
-- **Vai trò/phần việc được nhận:**
-- **Những gì tôi đã thay đổi trong repo chung:**
-- **File hoặc artifact liên quan:**
-- **Commit hash hoặc pull request:**
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:**
-- **Khó khăn tôi gặp và cách tôi xử lý:**
-- **Điều tôi học được từ phần việc này:**
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:**
+- **Vai trò/phần việc được nhận:** Thành viên C — Eval & Red-Team.
+- **Những gì tôi đã thay đổi trong repo chung:** Thiết kế 10 test case G01–G10 trong `data/eval_group.json`, gồm 5 single-turn và 5 multi-turn; chạy group evaluation; kiểm thử 12 adversarial cases; phân tích 5 lỗi `wrong_boundary`; và bổ sung runtime guard cho forged confirmation, stale confirmation và external identifier smuggling.
+- **File hoặc artifact liên quan:** `starter_v0/data/eval_group.json`; `starter_v0/agent.py`; `starter_v0/chat.py`; `starter_v0/tools/_shared.py`; các evidence trong `starter_v0/artifacts/evidence/C/` và `starter_v0/artifacts/evidence/C-secure/`.
+- **Commit hash hoặc pull request:** Commit `fe08ef6` — `Hoan thanh phan C`. Pull request: TBD do branch chưa push được vì tài khoản hiện tại chưa có quyền ghi vào repository chung.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Đặt các kiểm tra xác nhận và dữ liệu định danh ở runtime guard để các cuộc tấn công giả lập không thể vượt qua chỉ bằng prompt hoặc pseudo-tool output.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Lần chạy adversarial đầu có 5/12 case thất bại với lỗi `wrong_boundary`. Tôi phân tích log, bổ sung guard cho xác nhận giả/xác nhận cũ và identifier bên ngoài, rồi chạy regression lại.
+- **Điều tôi học được từ phần việc này:** Evaluation cần kiểm tra cả routing, arguments, multi-turn state và boundary bảo mật; kết quả pass của test thông thường chưa đủ để chứng minh agent an toàn.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
+
 
 Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
 tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
