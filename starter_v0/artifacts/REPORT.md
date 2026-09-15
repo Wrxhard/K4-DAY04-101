@@ -286,7 +286,7 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
   regression tests sớm hơn, thống nhất ownership/name/MSSV ngay đầu dự án, và
   thiết kế confirmation state do ứng dụng sở hữu thay vì tin boolean do model sinh.
 
-### Lại Bá Quân (`vxtor012`) — MSSV: 02495
+### Lại Bá Quân (`vxtor012`) — MSSV: 2A202602495
 
 - **Vai trò/phần việc được nhận:** Thiết kế và hiện thực hóa Bonus Tool `approved_software_catalog` cho hệ sinh thái IT Helpdesk Agent; thiết lập metadata, schema và dữ liệu mock.
 - **Những gì tôi đã thay đổi trong repo chung:**
@@ -310,7 +310,9 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 > Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
 > các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
-## C3. Final checkout
+> Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
+> Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
+> các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
 - [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
