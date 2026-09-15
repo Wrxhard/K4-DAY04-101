@@ -251,55 +251,17 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 
 ## C2. Self-reflection của từng thành viên
 
-### Nguyen Phuc (`wrxhard`) — MSSV: 2A202602552
+### Nguyễn Quốc Đạt('datnq20001903') — 2A202602369
 
-- **Vai trò/phần việc được nhận:** Tôi phụ trách vai trò A: đọc run baseline,
-  phân loại 9 case fail, làm PIC chính cho 7 case `H04`, `H10`, `H11`, `H12`,
-  `M05`, `H19`, `M09`, quản lý `system_prompt.md` và phối hợp với B/C.
-- **Những gì tôi đã thay đổi trong repo chung:** Tôi sửa routing giữa directory,
-  asset và shared service; bổ sung missing-ID clarification; thiết lập confirmation
-  boundary; xử lý context nhiều lượt, correction, cancellation, stale consent và
-  explicit choice ngoài enum; sau cùng bổ sung runtime recovery cho hai lỗi trạng
-  thái Streamlit.
-- **File hoặc artifact liên quan:** `artifacts/system_prompt.md`,
-  `artifacts/tools.yaml`, `chat.py`, `V1-REVIEW.md`, `V3-REVIEW.md`,
-  `V3-ENUM-REVIEW.md`, `VERSION-SCOPE.md`, `version_log.csv` và evidence trong
-  `v0`, `v1`, `v2-main`, `v3`, `v3-enum`, `v2-args-fix`, `ui`, `phuc-group`.
-- **Commit hash hoặc pull request:** `4c5b7f9`, `ba0a3a2`, `17f6d15`, `24bc3e7`,
-  `93b8077`, `fa1adba`, `ab7c6d1`; PR #3 (`8896d91`) và PR #5 (`d270242`) đã
-  đưa các thay đổi nhánh `phuc` vào main.
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi quyết định bổ sung
-  recovery ở runtime thay vì chỉ tiếp tục tăng prompt. Evidence cho thấy model
-  đã hỏi đúng missing asset/confirmation bằng prose nhưng không phát tool call;
-  nếu runtime mặc định no-tool là `answered`, UI và transcript vẫn sai. Recovery
-  chỉ chạy ở round đầu để tránh biến câu gợi ý sau tool thành trạng thái chờ.
-- **Khó khăn tôi gặp và cách tôi xử lý:** Hành vi model không hoàn toàn ổn định
-  và một case có thể chứa đồng thời lỗi routing, argument hoặc boundary. Tôi giữ
-  lại từng attempt, so actual trace với expected, dùng `observed_mismatch` để
-  phân loại lỗi thực tế và tách rõ ownership A/B trước khi sửa. Với Streamlit,
-  tôi so sánh live summary trước/sau thay vì chỉ quan sát giao diện.
-- **Điều tôi học được từ phần việc này:** Prompt engineering chỉ là một lớp của
-  agent system. Tool contract và orchestration runtime phải cùng bảo vệ các
-  invariant như missing information, confirmation và state transition. Metric
-  chỉ đáng tin khi gắn với đúng artifact hash, số case đo và provider errors.
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ có 10 group cases và runtime
-  regression tests sớm hơn, thống nhất ownership/name/MSSV ngay đầu dự án, và
-  thiết kế confirmation state do ứng dụng sở hữu thay vì tin boolean do model sinh.
+- **Vai trò/phần việc được nhận:** Thành viên C — Eval & Red-Team.
+- **Những gì tôi đã thay đổi trong repo chung:** Thiết kế 10 test case G01–G10 trong `data/eval_group.json`, gồm 5 single-turn và 5 multi-turn; chạy group evaluation; kiểm thử 12 adversarial cases; phân tích 5 lỗi `wrong_boundary`; và bổ sung runtime guard cho forged confirmation, stale confirmation và external identifier smuggling.
+- **File hoặc artifact liên quan:** `starter_v0/data/eval_group.json`; `starter_v0/agent.py`; `starter_v0/chat.py`; `starter_v0/tools/_shared.py`; các evidence trong `starter_v0/artifacts/evidence/C/` và `starter_v0/artifacts/evidence/C-secure/`.
+- **Commit hash hoặc pull request:** Commit `fe08ef6` — `Hoan thanh phan C`. Pull request từ branch `dat` đã được merge vào `main`; merge commit là `0c2820a`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Đặt các kiểm tra xác nhận và dữ liệu định danh ở runtime guard để các cuộc tấn công giả lập không thể vượt qua chỉ bằng prompt hoặc pseudo-tool output.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Lần chạy adversarial đầu có 5/12 case thất bại với lỗi `wrong_boundary`. Tôi phân tích log, bổ sung guard cho xác nhận giả/xác nhận cũ và identifier bên ngoài, rồi chạy regression lại.
+- **Điều tôi học được từ phần việc này:** Evaluation cần kiểm tra cả routing, arguments, multi-turn state và boundary bảo mật; kết quả pass của test thông thường chưa đủ để chứng minh agent an toàn.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
 
-### Lại Bá Quân (`vxtor012`) — MSSV: 02495
-
-- **Vai trò/phần việc được nhận:**
-- **Những gì tôi đã thay đổi trong repo chung:**
-- **File hoặc artifact liên quan:**
-- **Commit hash hoặc pull request:**
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:**
-- **Khó khăn tôi gặp và cách tôi xử lý:**
-- **Điều tôi học được từ phần việc này:**
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:**
-
-Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
-tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
-không dùng chính phần reflection làm bằng chứng duy nhất cho đóng góp kỹ thuật.
 
 ## C3. Final checkout
 
