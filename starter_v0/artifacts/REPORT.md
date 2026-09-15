@@ -263,7 +263,9 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
 
 
-## C3. Final checkout
+> Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
+> Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
+> các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
 - [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
