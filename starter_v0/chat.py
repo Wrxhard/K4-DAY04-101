@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -78,6 +79,42 @@ def assistant_tool_message(response_text: str | None, calls: list[ToolCall]) -> 
     }
 
 
+def plain_text_clarification_call(response_text: str | None) -> ToolCall | None:
+    """Recover a clarification when the model asked in prose without a tool call."""
+    if not response_text:
+        return None
+
+    question = response_text.strip()
+    try:
+        payload = json.loads(question)
+    except (json.JSONDecodeError, TypeError):
+        payload = None
+    if isinstance(payload, dict) and isinstance(payload.get("reply"), str):
+        question = payload["reply"].strip()
+
+    normalized = unicodedata.normalize("NFKD", question.casefold().replace("đ", "d"))
+    normalized = normalized.encode("ascii", "ignore").decode("ascii")
+    confirmation_markers = ("xac nhan", "dong y", "confirm")
+    input_markers = (
+        "vui long cung cap",
+        "hay cung cap",
+        "cho toi xin",
+        "can ban cung cap",
+        "please provide",
+        "could you provide",
+        "what is your",
+    )
+
+    if any(marker in normalized for marker in confirmation_markers):
+        response_type = "yes_no"
+    elif any(marker in normalized for marker in input_markers):
+        response_type = "text"
+    else:
+        return None
+
+    return ToolCall(name="clarify", args={"question": question, "response_type": response_type})
+
+
 def run_model_tool_loop(
     *,
     provider: Any,
@@ -118,6 +155,30 @@ def run_model_tool_loop(
         }
 
         if not calls:
+            # Some models occasionally follow the semantic instruction to ask
+            # the user, but omit the clarify tool call. Recover only before any
+            # tool has run; later prose questions may merely offer a next step.
+            recovered_call = None
+            if round_index == 1 and not all_tool_events:
+                recovered_call = plain_text_clarification_call(response.text)
+            if recovered_call is not None:
+                event = execute_tool_call(recovered_call)
+                round_record["tool_calls"].append({
+                    "name": recovered_call.name,
+                    "args": recovered_call.args,
+                })
+                round_record["tool_results"].append(event)
+                all_tool_events.append(event)
+                rounds.append(round_record)
+                result = event.get("result", {})
+                question = result.get("question") if isinstance(result, dict) else None
+                return {
+                    "status": "waiting_for_user",
+                    "assistant_text": question or recovered_call.args["question"],
+                    "rounds": rounds,
+                    "tool_events": all_tool_events,
+                }
+
             rounds.append(round_record)
             return {
                 "status": "answered",

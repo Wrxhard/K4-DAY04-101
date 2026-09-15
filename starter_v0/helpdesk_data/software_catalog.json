@@ -1,0 +1,113 @@
+{
+  "updated_at": "2026-03-01T08:00:00Z",
+  "software_list": [
+    {
+      "id": "SW-101",
+      "name": "Visual Studio Code",
+      "aliases": ["vscode", "vs code", "code"],
+      "category": "developer",
+      "status": "approved",
+      "latest_version": "1.95.0",
+      "install_method": "self_service",
+      "approval_required": false,
+      "allowed_departments": ["Engineering", "Product", "Data", "IT"],
+      "notes": "Approved for all technical staff. Extensions must comply with security policy."
+    },
+    {
+      "id": "SW-102",
+      "name": "Docker Desktop",
+      "aliases": ["docker"],
+      "category": "developer",
+      "status": "approved",
+      "latest_version": "4.35.0",
+      "install_method": "it_managed",
+      "approval_required": true,
+      "allowed_departments": ["Engineering", "Data"],
+      "notes": "Requires paid business license request via IT Helpdesk before install."
+    },
+    {
+      "id": "SW-103",
+      "name": "Slack",
+      "aliases": ["slack chat"],
+      "category": "communication",
+      "status": "approved",
+      "latest_version": "4.41.0",
+      "install_method": "self_service",
+      "approval_required": false,
+      "allowed_departments": ["All"],
+      "notes": "Company-wide communication tool. Sign in using SSO."
+    },
+    {
+      "id": "SW-104",
+      "name": "Zoom Meetings",
+      "aliases": ["zoom"],
+      "category": "communication",
+      "status": "approved",
+      "latest_version": "6.2.5",
+      "install_method": "self_service",
+      "approval_required": false,
+      "allowed_departments": ["All"],
+      "notes": "Default video conference tool. Use corporate account."
+    },
+    {
+      "id": "SW-105",
+      "name": "Microsoft 365 Apps",
+      "aliases": ["office", "excel", "word", "outlook", "teams"],
+      "category": "productivity",
+      "status": "approved",
+      "latest_version": "16.0.17830",
+      "install_method": "preinstalled",
+      "approval_required": false,
+      "allowed_departments": ["All"],
+      "notes": "Preinstalled on corporate laptops. Managed via Intune."
+    },
+    {
+      "id": "SW-106",
+      "name": "Figma",
+      "aliases": ["figma desktop"],
+      "category": "design",
+      "status": "approved",
+      "latest_version": "124.3.2",
+      "install_method": "it_managed",
+      "approval_required": true,
+      "allowed_departments": ["Design", "Product"],
+      "notes": "Desktop app approved. Enterprise editor seat requires manager approval."
+    },
+    {
+      "id": "SW-107",
+      "name": "Bitwarden",
+      "aliases": ["password manager"],
+      "category": "security",
+      "status": "approved",
+      "latest_version": "2024.10.0",
+      "install_method": "self_service",
+      "approval_required": false,
+      "allowed_departments": ["All"],
+      "notes": "Official password manager for Northstar Labs."
+    },
+    {
+      "id": "SW-108",
+      "name": "WireGuard Client",
+      "aliases": ["wireguard"],
+      "category": "security",
+      "status": "restricted",
+      "latest_version": "0.5.3",
+      "install_method": "prohibited",
+      "approval_required": true,
+      "allowed_departments": ["None"],
+      "notes": "Restricted. Employees must use corporate GlobalProtect VPN."
+    },
+    {
+      "id": "SW-109",
+      "name": "uTorrent / BitTorrent",
+      "aliases": ["utorrent", "bittorrent", "torrent"],
+      "category": "utilities",
+      "status": "prohibited",
+      "latest_version": "any",
+      "install_method": "prohibited",
+      "approval_required": false,
+      "allowed_departments": ["None"],
+      "notes": "Strictly prohibited on all company assets per IT Security Policy."
+    }
+  ]
+}
