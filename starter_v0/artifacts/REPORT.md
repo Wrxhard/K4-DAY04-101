@@ -1,10 +1,14 @@
 # Day 04 Lab v3 Report — IT Helpdesk Agent
+Nhóm xây dựng Northstar IT Helpdesk Agent bằng cách cải thiện system prompt và
+tool declarations qua các phiên bản v0–v3. Với OpenAI `gpt-4o-mini`, base
+accuracy tăng từ 0.7000 lên 0.9000; team eval đạt 10/10 và live UI đạt đúng
+tool/status behavior ở 5/5 scenario. Giới hạn còn lại là final response chưa
+tuân thủ JSON contract ổn định và adversarial run 12/12 sử dụng thêm application
+guardrails ngoài prompt/schema.
 
-> Báo cáo tổng hợp theo artifact v3 trên branch `phuc`, lịch sử Git đến `d2bdd04`,
-> workbook phân công `Tong_hop_loi_va_PIC_5_nguoi_cap_nhat.xlsx` và các run evidence
-> đã lưu trong repository. Phạm vi version được mô tả tại
-> [VERSION-SCOPE.md](VERSION-SCOPE.md), [V3-REVIEW.md](V3-REVIEW.md) và
-> [V3-ENUM-REVIEW.md](V3-ENUM-REVIEW.md).
+Chi tiết phạm vi và các lần thử được lưu tại [VERSION-SCOPE.md](VERSION-SCOPE.md),
+[V1-REVIEW.md](V1-REVIEW.md), [V3-REVIEW.md](V3-REVIEW.md) và
+[V3-ENUM-REVIEW.md](V3-ENUM-REVIEW.md).
 
 ## Team
 
@@ -251,6 +255,60 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 
 ## C2. Self-reflection của từng thành viên
 
+### Nguyen Phuc (`wrxhard`) — MSSV: 2A202602552
+
+- **Vai trò/phần việc được nhận:** Tôi phụ trách vai trò A: đọc run baseline,
+  phân loại 9 case fail, làm PIC chính cho 7 case `H04`, `H10`, `H11`, `H12`,
+  `M05`, `H19`, `M09`, quản lý `system_prompt.md` và phối hợp với B/C.
+- **Những gì tôi đã thay đổi trong repo chung:** Tôi sửa routing giữa directory,
+  asset và shared service; bổ sung missing-ID clarification; thiết lập confirmation
+  boundary; xử lý context nhiều lượt, correction, cancellation, stale consent và
+  explicit choice ngoài enum; sau cùng bổ sung runtime recovery cho hai lỗi trạng
+  thái Streamlit.
+- **File hoặc artifact liên quan:** `artifacts/system_prompt.md`,
+  `artifacts/tools.yaml`, `chat.py`, `V1-REVIEW.md`, `V3-REVIEW.md`,
+  `V3-ENUM-REVIEW.md`, `VERSION-SCOPE.md`, `version_log.csv` và evidence trong
+  `v0`, `v1`, `v2-main`, `v3`, `v3-enum`, `v2-args-fix`, `ui`, `phuc-group`.
+- **Commit hash hoặc pull request:** `4c5b7f9`, `ba0a3a2`, `17f6d15`, `24bc3e7`,
+  `93b8077`, `fa1adba`, `ab7c6d1`; PR #3 (`8896d91`) và PR #5 (`d270242`) đã
+  đưa các thay đổi nhánh `phuc` vào main.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi quyết định bổ sung
+  recovery ở runtime thay vì chỉ tiếp tục tăng prompt. Evidence cho thấy model
+  đã hỏi đúng missing asset/confirmation bằng prose nhưng không phát tool call;
+  nếu runtime mặc định no-tool là `answered`, UI và transcript vẫn sai. Recovery
+  chỉ chạy ở round đầu để tránh biến câu gợi ý sau tool thành trạng thái chờ.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Hành vi model không hoàn toàn ổn định
+  và một case có thể chứa đồng thời lỗi routing, argument hoặc boundary. Tôi giữ
+  lại từng attempt, so actual trace với expected, dùng `observed_mismatch` để
+  phân loại lỗi thực tế và tách rõ ownership A/B trước khi sửa. Với Streamlit,
+  tôi so sánh live summary trước/sau thay vì chỉ quan sát giao diện.
+- **Điều tôi học được từ phần việc này:** Prompt engineering chỉ là một lớp của
+  agent system. Tool contract và orchestration runtime phải cùng bảo vệ các
+  invariant như missing information, confirmation và state transition. Metric
+  chỉ đáng tin khi gắn với đúng artifact hash, số case đo và provider errors.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ có 10 group cases và runtime
+  regression tests sớm hơn, thống nhất ownership/name/MSSV ngay đầu dự án, và
+  thiết kế confirmation state do ứng dụng sở hữu thay vì tin boolean do model sinh.
+
+### Lại Bá Quân (`vxtor012`) — MSSV: 2A202602495
+
+- **Vai trò/phần việc được nhận:** Thiết kế và hiện thực hóa Bonus Tool `approved_software_catalog` cho hệ sinh thái IT Helpdesk Agent; thiết lập metadata, schema và dữ liệu mock.
+- **Những gì tôi đã thay đổi trong repo chung:**
+  - Viết module logic tra cứu danh mục phần mềm trong `starter_v0/tools/approved_software_catalog/tool.py`.
+  - Soạn thảo tài liệu đặc tả tool tại `starter_v0/tools/approved_software_catalog/TOOL.md`.
+  - Xây dựng tệp cơ sở dữ liệu mẫu `starter_v0/helpdesk_data/software_catalog.json`.
+  - Khai báo schema chuẩn vào `starter_v0/artifacts/tools.yaml` và đăng ký trong `starter_v0/tools/__init__.py`.
+- **File hoặc artifact liên quan:**
+  - `starter_v0/tools/approved_software_catalog/tool.py`
+  - `starter_v0/tools/approved_software_catalog/TOOL.md`
+  - `starter_v0/helpdesk_data/software_catalog.json`
+  - `starter_v0/artifacts/tools.yaml`
+  - `starter_v0/tools/__init__.py`
+- **Commit hash hoặc pull request:** Implementation `764b0f0`; cập nhật report `30e9be6`, `53897dd`; merge PR #7 `d2bdd04` từ branch `quan` vào `main`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi thiết kế thuật toán tìm kiếm hybrid 2 lớp: vừa khớp chuỗi con không dấu (`fold_text`), vừa so khớp tập hợp từ khóa sau khi lọc stop words (`terms.issubset`). Thiết kế này giúp Agent hoạt động bền bỉ, nhận diện đúng phần mềm kể cả khi người dùng gõ tiếng Việt có dấu/không dấu, gõ tên viết tắt (như `vscode`) hoặc gõ xáo trộn thứ tự từ khóa.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Tool cần nhận diện cả tên đầy đủ và cách gọi ngắn của phần mềm. Tôi bổ sung trường `aliases` trong `software_catalog.json` và kết hợp `fold_text` với tập từ khóa để các query như `Docker Desktop` và `docker` cùng trả về đúng mục.
+- **Điều tôi học được từ phần việc này:** Hiểu rõ cách Agent tương tác với Tool Calling Interface: cách đặt tên (`name`), viết mô tả (`description`) và các kiểu tham số (`parameters`) trong `tools.yaml` quyết định trực tiếp việc LLM có trích xuất đúng ý định của người dùng hay không.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Bổ sung trường lọc theo trạng thái chính sách (chỉ lọc phần mềm `status: approved` hoặc cảnh báo ngay khi gặp phần mềm `status: prohibited`) trực tiếp trong logic trả về của tool để phản hồi cho người dùng dứt khoát và an toàn hơn.
 ### Nguyễn Quốc Đạt('datnq20001903') — 2A202602369
 
 - **Vai trò/phần việc được nhận:** Thành viên C — Eval & Red-Team.
@@ -263,14 +321,40 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Chuẩn hóa sớm ma trận attack–expected behavior và bổ sung kiểm thử tự động cho các biến thể confirmation, cancellation và data exfiltration.
 
 
-> Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
-> Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
-> các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
+### Nguyễn Trần Nhựt Nam (`nhut-nam`) — MSSV: 2A202602981
+
+- **Vai trò/phần việc được nhận:** Tôi phụ trách vai trò B: Setup provider/preflight; làm PIC chính cho 2 case lỗi về arguments/schema (`H13_parallel_status_and_device`, `H17_triage_with_three_sources`); quản lý file `artifacts/tools.yaml` và hỗ trợ đồng bộ tool schema/registry.
+- **Những gì tôi đã thay đổi trong repo chung:**
+  - Chuẩn hóa schema các tool trong `tools.yaml`, đặc biệt cấu hình tham số `check` thành bắt buộc (`required: [asset_id, check]`) trong `inspect_device` để ép model luôn chỉ định rõ diagnostic scope (`vpn`, `network`,...) thay vì bỏ sót.
+  - Tinh chỉnh `search_kb` (`required: []`) để hỗ trợ tra cứu linh hoạt theo danh mục mà không ép buộc query trống.
+  - Phối hợp resolve merge conflict và đồng bộ schema các tool mới (như `approved_software_catalog`) trên nhánh `main`.
+- **File hoặc artifact liên quan:** `starter_v0/artifacts/tools.yaml`, `starter_v0/artifacts/REPORT.md`.
+- **Commit hash hoặc pull request:** `31820c5`, `3d8d400`, `f064e49`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi quyết định đưa tham số `check` vào danh sách `required: [asset_id, check]` của `inspect_device`. Ở baseline v0, `check` không bắt buộc và có default là `"all"`, dẫn đến model thường xuyên bỏ qua hoặc chọn sai phạm vi chẩn đoán khi gặp sự cố VPN chuyên biệt (như trong case `H13` và `H17`). Việc quy định required ở schema giúp model bắt buộc phải trích xuất đúng argument ngay từ tầng định nghĩa tool calling.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Việc thay đổi schema trong `tools.yaml` nếu không cẩn thận có thể ảnh hưởng đến các case khác hoặc gây conflict với phần prompt mà thành viên khác đang sửa. Tôi đã kiểm tra kỹ cấu trúc schema, giữ các mô tả ngắn gọn súc tích và chủ động resolve merge conflict giữa branch cá nhân và `main`.
+- **Điều tôi học được từ phần việc này:** Hiểu rõ sức mạnh của Tool Calling Schema (JSON Schema). Tinh chỉnh schema (required fields, enum, mô tả tham số) đóng vai trò như một "hàng rào bảo vệ" cấu trúc cực kỳ hiệu quả, bổ trợ trực tiếp cho Prompt Engineering mà không cần nhồi nhét quá nhiều câu lệnh dài dòng vào system prompt.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ xây dựng thêm các script validate schema tự động sớm hơn để kiểm tra tính tương thích giữa `tools.yaml`, `tools/__init__.py` và các bộ test case ngay khi có thay đổi.
+
+### Nguyễn Văn Huy (`HuyHaiThanh`) — MSSV: 2A202602428
+
+- **Vai trò/phần việc được nhận:** Tôi phụ trách xây dựng Streamlit UI, chuẩn bị kịch bản demo, kiểm tra luồng chat và tổng hợp evidence UI vào báo cáo chung.
+- **Những gì tôi đã thay đổi trong repo chung:** Tôi xây dựng giao diện chat trong `app.py`, sau đó tích hợp giao diện với runtime `run_model_tool_loop` có sẵn. Tôi bổ sung phần hiển thị tool name, arguments, result/error, trạng thái xử lý, artifact version, prompt/tools hash và chức năng lưu hoặc tải transcript. Tôi cũng viết bộ regression test cho UI, script chạy năm live-demo scenario và cập nhật tài liệu demo/report từ kết quả quan sát thực tế.
+- **File hoặc artifact liên quan:** `starter_v0/app.py`, `starter_v0/requirements.txt`, `starter_v0/UI-README.md`, `starter_v0/DEMO-GUIDE.md`, `starter_v0/scripts/check_ui_demo.py`, `starter_v0/ui_tests/test_streamlit_app.py`, `starter_v0/artifacts/evidence/ui/` và `starter_v0/artifacts/REPORT.md`.
+- **Commit hash hoặc pull request:** `5ac8180`, `ad85edc`, `6e52a49`, `d896b7e` và PR #4. Run mới tại `starter_v0/artifacts/evidence/ui/live_20260915T102638/` chưa có commit tương ứng nên commit hash hiện là `TBD`.
+- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi chọn tái sử dụng trực tiếp `run_model_tool_loop` của ứng dụng thay vì viết một agent loop riêng cho UI. Tôi cũng giữ nguyên raw response và tool trace trong transcript. Cách này giúp giao diện phản ánh đúng hành vi thực tế của artifact/model và cho phép người review đối chiếu kết quả thay vì dựa vào phần trình bày của UI.
+- **Khó khăn tôi gặp và cách tôi xử lý:** Trong lần chạy ban đầu, model hỏi bổ sung thông tin bằng prose thay vì gọi `clarify`, khiến UI ghi trạng thái `answered` dù nội dung thực tế đang chờ người dùng. Tôi giữ lại run lỗi làm evidence, bổ sung checker phân biệt `answered`, `waiting_for_user`, `provider_error` và `max_tool_rounds`, rồi chạy lại năm scenario. Run mới đạt 5/5 về tool/status behavior và không có application exception; JSON response contract vẫn không đạt và được ghi rõ trong report.
+- **Điều tôi học được từ phần việc này:** Tôi nhận thấy một UI cho agent cần hiển thị cả quá trình tool calling, arguments, result/error, version và transcript. Chỉ hiển thị câu trả lời cuối không đủ để đánh giá routing, context carry-over hoặc safety boundary.
+- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ chốt artifact cuối trước khi tạo live evidence, tự động kiểm tra hash giữa transcript và report, lưu kết quả regression thành artifact có thể đối chiếu, đồng thời tách riêng tiêu chí tool/status behavior và JSON response contract để tránh hiểu nhầm một phần PASS là toàn bộ agent đã PASS.
+
+Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
+tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
+không dùng chính phần reflection làm bằng chứng duy nhất cho đóng góp kỹ thuật.
+
 
 - [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
 - [x] Phần reflection chung của nhóm đã hoàn thành và có evidence.
-- [ ] Mỗi thành viên đã tự viết và commit self-reflection của mình.
+- [x] Mỗi thành viên đã tự viết và commit self-reflection của mình.
 - [x] `system_prompt.md`, `tools.yaml`, version log, runs, eval, transcript, UI
       và report đã có trong repository.
 - [x] Không có `.env`, API key, token, dữ liệu thật, cache hoặc generated ticket.
