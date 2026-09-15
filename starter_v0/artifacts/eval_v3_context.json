@@ -1,0 +1,116 @@
+{
+  "dataset_id": "v3_context_supplement_revision2",
+  "dataset_role": "supplemental",
+  "description": "Additional context and template regressions; not the required 10-case team suite. Revision 2 explicitly separates title and findings in the template-switch fixture to avoid an ambiguous colon.",
+  "cases": [
+    {
+      "id": "V3T01_switch_report_template",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Use template technical and incident_title \"Office network\". Findings: packet loss 8%; VPN timeout."
+        },
+        {
+          "role": "user",
+          "content": "Change only the template to handoff. Keep the findings and title; do not check anything again."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "handoff",
+              "incident_title": "Office network"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "V3T02_correct_title_keep_template",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Create a brief report titled Laptop issue with findings: battery health poor."
+        },
+        {
+          "role": "user",
+          "content": "Rename the report to Battery handover, keeping the same findings and template."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "brief",
+              "incident_title": "Battery handover"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "V3T03_missing_report_findings",
+      "phase": "B",
+      "suite": "group",
+      "query": "Format a technical incident report for me. I have not supplied any findings yet.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "V3T04_missing_service",
+      "phase": "B",
+      "suite": "group",
+      "query": "Check the status in production.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "V3T05_missing_environment",
+      "phase": "B",
+      "suite": "group",
+      "query": "Check the email service status.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

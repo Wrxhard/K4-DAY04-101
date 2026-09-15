@@ -1,0 +1,105 @@
+{
+  "dataset_id": "v3_enum_clarify",
+  "dataset_role": "supplemental",
+  "description": "Unsupported explicit enum choices must clarify; enum definitions stay unchanged.",
+  "cases": [
+    {
+      "id": "V3E01_unknown_environment",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      },
+      "query": "Check VPN in environment sandbox-blue."
+    },
+    {
+      "id": "V3E02_unknown_template",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "brief",
+                "technical",
+                "handoff"
+              ]
+            }
+          }
+        ]
+      },
+      "query": "Findings: battery health poor. Set incident_title to Battery review and template to executive."
+    },
+    {
+      "id": "V3E03_unknown_device_check",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "all",
+                "network",
+                "vpn",
+                "security",
+                "hardware",
+                "software"
+              ]
+            }
+          }
+        ]
+      },
+      "query": "Inspect LT-240 with check=thermal."
+    },
+    {
+      "id": "V3E04_changed_invalid_environment",
+      "phase": "B",
+      "suite": "group",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      },
+      "turns": [
+        {
+          "role": "user",
+          "content": "Check email production."
+        },
+        {
+          "role": "user",
+          "content": "Correction: use environment preview-green instead. Only check that environment."
+        }
+      ]
+    }
+  ]
+}

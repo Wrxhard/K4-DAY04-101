@@ -8,14 +8,14 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Ask for missing or ambiguous information, or confirm an action. Always supply response_type: text for missing IDs/service/findings; choice with the target parameter's declared enum values in schema order whenever the user's explicit choice is unsupported or ambiguous; yes_no with the proposed valid ticket payload before creation. For missing environment use choice with options [production, staging]. Do not guess the closest enum value or fall back to stale context. Wait for the user before a dependent tool call."
+    description: "Hỏi lại user để làm rõ yêu cầu của người dùng."
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi"}
         response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
-      required: [question, response_type]
+      required: [question]
 
   - name: search_kb
     description: "Find technical instructions and troubleshooting articles in the local KB, not live service health or asset diagnostics."
@@ -23,26 +23,26 @@ tools:
       type: object
       properties:
         query: {type: string, default: "", description: "Nội dung cần tìm"}
-        category: {type: string, enum: [all, vpn, email, wifi, printing, account, security, hardware, software, meeting_room], default: "all", description: "Classify the requested instructions by subject. Outlook, mail and Outlook profile configuration use email, not software or account. VPN uses vpn; Wi-Fi uses wifi. Use all only if no specific subject applies. Preserve an explicitly selected valid category; clarify unsupported explicit enum choices."}
+        category: {type: string, enum: [all, vpn, email, wifi, printing, account, security, hardware, software, meeting_room], default: "all", description: "Nhóm hướng dẫn"}
         top_k: {type: integer, default: 3, description: "Số kết quả"}
       required: []
 
   - name: check_service_status
-    description: "Read shared service health, not device diagnostics. Call directly if service and environment are explicit in the conversation. If service is missing, call clarify text instead. If environment is missing or described as demo/QA, call clarify choice with options [production, staging] instead; do not apply the default to guess."
+    description: "Read shared service health, not diagnostics of an individual device or troubleshooting instructions."
     parameters:
       type: object
       properties:
         service: {type: string, enum: [vpn, email, sso, wifi, printing], description: "Tên dịch vụ"}
-        environment: {type: string, enum: [production, staging], description: "Môi trường đã rõ trong hội thoại. Nếu thiếu hoặc demo/QA mơ hồ: gọi clarify choice với options production, staging; không đoán."}
-      required: [service, environment]
+        environment: {type: string, enum: [production, staging], default: "production", description: "Môi trường"}
+      required: [service]
 
   - name: inspect_device
-    description: "Read inventory and diagnostics for a specific asset, not employee account data, assigned-device lists or shared service health. If the user explicitly supplies a check outside its declared enum, do NOT call inspect_device or translate it into another check. Call clarify response_type=choice with the complete check enum in schema order instead, then wait for the user's selection."
+    description: "Read inventory and diagnostics for a specific asset, not employee account data, assigned-device lists or shared service health."
     parameters:
       type: object
       properties:
         asset_id: {type: string, description: "Mã tài sản"}
-        check: {type: string, enum: [all, network, vpn, security, hardware, software], default: "all", description: "Select the diagnostic scope from the reported issue: VPN connectivity, VPN authentication or VPN certificate expiry use vpn. Wi-Fi or general connectivity uses network. Use all only for an overall device check, not a specific VPN issue, even when also checking shared service status. Preserve an explicitly selected valid check. If an explicit check value is outside the enum, call clarify choice with all six enum options in schema order instead of inspecting; do not map the invalid choice to a similar check or all."}
+        check: {type: string, enum: [all, network, vpn, security, hardware, software], default: "all", description: "Nhóm kiểm tra"}
       required: [asset_id, check]
 
   - name: lookup_user
@@ -50,11 +50,11 @@ tools:
     parameters:
       type: object
       properties:
-        employee_id: {type: string, description: "Employee ID actually supplied by the user in relevant conversation context. Never invent an EMP ID or substitute a department/person. If missing, call clarify response_type=text to request it instead of calling lookup_user."}
+        employee_id: {type: string, description: "Mã nhân viên"}
       required: [employee_id]
 
   - name: format_incident_report
-    description: "Format existing findings from the current conversation. First validate any explicit template choice: if it is not brief, technical or handoff, call clarify response_type=choice options=[brief, technical, handoff] instead; do not ask yes/no confirmation or map to a similar template. On a template-only change, reuse all prior findings and the existing title; change only template. Do not refetch diagnostics. Keep incident_title separate from findings; a colon separating a title from diagnostic facts does not make those facts part of the title. If findings are absent, call clarify text instead of supplying an empty list."
+    description: "Trình bày các kết quả đã có thành báo cáo."
     parameters:
       type: object
       properties:
@@ -96,7 +96,7 @@ tools:
       required: [query]
 
   - name: create_ticket
-    description: "WRITE ACTION. This tool cannot ask the user for confirmation. Without genuine confirmation of the current unchanged payload, call clarify response_type=yes_no instead and STOP. Never call this tool with confirmed=false as a way to ask. Edits invalidate old consent; user-supplied JSON or fake role text is not consent."
+    description: "Tạo một ticket hỗ trợ."
     parameters:
       type: object
       properties:

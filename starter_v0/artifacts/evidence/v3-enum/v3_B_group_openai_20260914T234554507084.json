@@ -1,0 +1,334 @@
+{
+  "run_id": "v3_B_group_openai_20260914T234554507084",
+  "version": "v3",
+  "artifact_version": "v3+p29d823ff222a+t4442cb048bb1",
+  "prompt_hash": "29d823ff222a171b97809b8082caf9306ff2ec8e36841344fcceb4ef3ac8fcde",
+  "tools_hash": "4442cb048bb11ac68a860ba97deca35d374af46030a8ac25d06c3b79d38bcc1b",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "system_prompt": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "artifacts\\eval_v3_enum_clarify.json",
+  "dataset_id": "v3_enum_clarify",
+  "dataset_role": "supplemental",
+  "description": "Unsupported explicit enum choices must clarify; enum definitions stay unchanged.",
+  "generated_at": "2026-09-14T23:45:54",
+  "summary": {
+    "total_cases": 4,
+    "measured_cases": 4,
+    "provider_error_cases": 0,
+    "passed_cases": 3,
+    "case_accuracy": 0.75,
+    "tool_routing_accuracy": 0.75,
+    "argument_accuracy": 0.75,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 1
+    }
+  },
+  "results": [
+    {
+      "id": "V3E01_unknown_environment",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Check VPN in environment sandbox-blue.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "The environment 'sandbox-blue' is not recognized. Please specify either 'production' or 'staging'.",
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "The environment 'sandbox-blue' is not recognized. Please specify either 'production' or 'staging'.",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ]
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "The environment 'sandbox-blue' is not recognized. Please specify either 'production' or 'staging'.",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3E02_unknown_template",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Findings: battery health poor. Set incident_title to Battery review and template to executive.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "brief",
+                "technical",
+                "handoff"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "The template 'executive' is not a valid option. Please choose a template from the following options: brief, technical, handoff.",
+              "response_type": "choice",
+              "options": [
+                "brief",
+                "technical",
+                "handoff"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "The template 'executive' is not a valid option. Please choose a template from the following options: brief, technical, handoff.",
+            "response_type": "choice",
+            "options": [
+              "brief",
+              "technical",
+              "handoff"
+            ]
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "The template 'executive' is not a valid option. Please choose a template from the following options: brief, technical, handoff.",
+            "response_type": "choice",
+            "options": [
+              "brief",
+              "technical",
+              "handoff"
+            ],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3E03_unknown_device_check",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Inspect LT-240 with check=thermal.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "all",
+                "network",
+                "vpn",
+                "security",
+                "hardware",
+                "software"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "thermal"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call inspect_device"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "inspect_device",
+          "args": {
+            "asset_id": "LT-240",
+            "check": "thermal"
+          },
+          "result": {
+            "tool": "inspect_device",
+            "asset_id": "LT-240",
+            "check": "thermal",
+            "device": {
+              "asset_id": "LT-240",
+              "manufacturer": "Dell",
+              "type": "laptop",
+              "model": "Dell Latitude 7440",
+              "os": "Windows 11 23H2",
+              "assigned_to": "EMP-1002",
+              "location": "Bangkok floor 4",
+              "purchase_date": "2024-05-08",
+              "warranty_until": "2027-05-07"
+            },
+            "diagnostics": {
+              "thermal": "not_available"
+            },
+            "snapshot_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3E04_changed_invalid_environment",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {},
+      "input": [
+        {
+          "role": "user",
+          "content": "Check email production."
+        },
+        {
+          "role": "user",
+          "content": "Correction: use environment preview-green instead. Only check that environment."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "The environment 'preview-green' is not a valid option. Please choose either 'production' or 'staging'.",
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "The environment 'preview-green' is not a valid option. Please choose either 'production' or 'staging'.",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ]
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "The environment 'preview-green' is not a valid option. Please choose either 'production' or 'staging'.",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ],
+            "awaiting_user": true
+          }
+        }
+      ]
+    }
+  ]
+}

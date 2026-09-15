@@ -1,5 +1,11 @@
 # Day 04 Lab v3 Report — IT Helpdesk Agent
 
+> Đã lấy v2 từ main và triển khai **v3 — Context & Clarify** trên `phuc`.
+> Xem [VERSION-SCOPE.md](VERSION-SCOPE.md) và [V3-REVIEW.md](V3-REVIEW.md)
+> để biết phạm vi, kết quả và giới hạn. Các kết quả cũ trong V1-REVIEW.md
+> thuộc bản trộn phạm vi; các bảng template bên dưới chưa thay thế báo cáo v3 riêng.
+> Đối chiếu case mới nhất và rule không đoán enum: [V3-ENUM-REVIEW.md](V3-ENUM-REVIEW.md).
+
 ## Team
 
 - Team:

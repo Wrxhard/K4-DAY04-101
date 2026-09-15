@@ -1,0 +1,4 @@
+# Artifact hashes must survive checkout on both Windows and Linux.
+starter_v0/artifacts/system_prompt.md -text whitespace=cr-at-eol
+starter_v0/artifacts/tools.yaml -text whitespace=cr-at-eol
+starter_v0/artifacts/evidence/** -text whitespace=cr-at-eol

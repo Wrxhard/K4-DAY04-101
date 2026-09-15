@@ -1,0 +1,365 @@
+{
+  "run_id": "v3_B_group_openai_20260914T233222957761",
+  "version": "v3",
+  "artifact_version": "v3+pc3edca89cb6e+t31f891af52fa",
+  "prompt_hash": "c3edca89cb6e1a033c9fb1b94adb4be4898139ffeeacc444aac62e30e6721bf9",
+  "tools_hash": "31f891af52fa79a27438c2f188f64b64a7fded73a828959df3486166bec7c21b",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "system_prompt": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "artifacts\\eval_v3_context.json",
+  "dataset_id": "v3_context_supplement",
+  "dataset_role": "supplemental",
+  "description": "Additional context and template regressions; not the required 10-case team suite.",
+  "generated_at": "2026-09-14T23:32:22",
+  "summary": {
+    "total_cases": 5,
+    "measured_cases": 5,
+    "provider_error_cases": 0,
+    "passed_cases": 2,
+    "case_accuracy": 0.4,
+    "tool_routing_accuracy": 0.6,
+    "argument_accuracy": 0.4,
+    "multiturn_accuracy": 0.5,
+    "failure_counts": {
+      "wrong_arg_value": 1,
+      "missing_info": 2
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 1,
+      "missing_tool_call": 2
+    }
+  },
+  "results": [
+    {
+      "id": "V3T01_switch_report_template",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {},
+      "input": [
+        {
+          "role": "user",
+          "content": "Format these findings as a technical report titled Office network: packet loss 8%, VPN timeout."
+        },
+        {
+          "role": "user",
+          "content": "Change only the template to handoff. Keep the findings and title; do not check anything again."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "handoff",
+              "incident_title": "Office network"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "findings": [],
+              "template": "handoff",
+              "incident_title": "Office network: packet loss 8%, VPN timeout"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "incident_title: expected 'Office network', got 'Office network: packet loss 8%, VPN timeout'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "format_incident_report",
+          "args": {
+            "findings": [],
+            "template": "handoff",
+            "incident_title": "Office network: packet loss 8%, VPN timeout"
+          },
+          "result": {
+            "tool": "format_incident_report",
+            "template": "handoff",
+            "markdown": "# Handoff: Office network: packet loss 8%, VPN timeout\n\n\n- Owner: unassigned\n- Status: needs review",
+            "finding_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3T02_correct_title_keep_template",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {},
+      "input": [
+        {
+          "role": "user",
+          "content": "Create a brief report titled Laptop issue with findings: battery health poor."
+        },
+        {
+          "role": "user",
+          "content": "Rename the report to Battery handover, keeping the same findings and template."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "brief",
+              "incident_title": "Battery handover"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "format_incident_report",
+            "args": {
+              "findings": [
+                {
+                  "label": "battery health",
+                  "detail": "poor"
+                }
+              ],
+              "template": "brief",
+              "incident_title": "Battery handover"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "format_incident_report",
+          "args": {
+            "findings": [
+              {
+                "label": "battery health",
+                "detail": "poor"
+              }
+            ],
+            "template": "brief",
+            "incident_title": "Battery handover"
+          },
+          "result": {
+            "tool": "format_incident_report",
+            "template": "brief",
+            "markdown": "**Battery handover**\n- **battery health:** poor",
+            "finding_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3T03_missing_report_findings",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Format a technical incident report for me. I have not supplied any findings yet.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "What specific findings would you like to include in the technical incident report?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "What specific findings would you like to include in the technical incident report?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "What specific findings would you like to include in the technical incident report?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3T04_missing_service",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Check the status in production.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "vpn",
+              "environment": "production"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call check_service_status"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "check_service_status",
+          "args": {
+            "service": "vpn",
+            "environment": "production"
+          },
+          "result": {
+            "tool": "check_service_status",
+            "service": "vpn",
+            "environment": "production",
+            "status": "degraded",
+            "incident": "Intermittent authentication failures for some Windows clients",
+            "incident_id": "INC-1042",
+            "affected_locations": [
+              "Bangkok",
+              "Remote"
+            ],
+            "started_at": "2026-09-14T07:35:00+07:00",
+            "last_updated": "2026-09-14T08:50:00+07:00",
+            "workaround": "Retry once after synchronizing the device clock",
+            "checked_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "V3T05_missing_environment",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {},
+      "input": "Check the email service status.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "email"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call check_service_status"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "check_service_status",
+          "args": {
+            "service": "email"
+          },
+          "result": {
+            "tool": "check_service_status",
+            "service": "email",
+            "environment": "production",
+            "status": "operational",
+            "incident": null,
+            "incident_id": null,
+            "affected_locations": [],
+            "started_at": null,
+            "last_updated": "2026-09-14T08:58:00+07:00",
+            "workaround": null,
+            "checked_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    }
+  ]
+}
