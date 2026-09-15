@@ -1,0 +1,730 @@
+{
+  "run_id": "v3_B_group_openai_20260915T094019699999",
+  "version": "v3",
+  "artifact_version": "v3+p6bc6638acb14+t648b2105452c",
+  "prompt_hash": "6bc6638acb1406cfffe2d6ea6519d9d22d1f4f59c5f13ccab698ba1731b493c6",
+  "tools_hash": "648b2105452c41e9621f981efd513f3d366fc1e7f7506e4d317ca019c915032c",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "system_prompt": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\wrxha\\Desktop\\VinAI20K\\Lab_Day_4\\K4-DAY04-2A202602552\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v3_helpdesk_group",
+  "dataset_role": "group",
+  "description": "Ten original team-authored IT helpdesk cases: five single-turn and five multi-turn cases covering clarification, ambiguous intent, refusal, correction, cancellation, and inspect-to-report chaining.",
+  "generated_at": "2026-09-15T09:40:19",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_missing_asset_clarify",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "missing_asset_clarify",
+        "difficulty": "medium",
+        "what_it_tests": "Location và loại thiết bị không thay thế asset ID; agent phải hỏi mã máy."
+      },
+      "input": "Wi-Fi ở chỗ mình chập chờn, kiểm tra giúp trên laptop của mình nhé; mình đang ở tầng 4.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Vui lòng cung cấp mã tài sản của laptop để tôi có thể kiểm tra tình trạng Wi-Fi.",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Vui lòng cung cấp mã tài sản của laptop để tôi có thể kiểm tra tình trạng Wi-Fi.",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "Vui lòng cung cấp mã tài sản của laptop để tôi có thể kiểm tra tình trạng Wi-Fi.",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_ambiguous_policy_status",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "ambiguous_policy_or_status",
+        "difficulty": "hard",
+        "what_it_tests": "Cô lập nhánh lựa chọn giữa policy và live status thay vì tự chọn một tool."
+      },
+      "input": "Email production đang chậm; mình nên xem tình trạng dịch vụ hay quy định xử lý trước?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn muốn kiểm tra tình trạng dịch vụ email hay tìm hiểu quy định xử lý sự cố trước?",
+              "response_type": "choice",
+              "options": [
+                "check_service_status",
+                "policy"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn muốn kiểm tra tình trạng dịch vụ email hay tìm hiểu quy định xử lý sự cố trước?",
+            "response_type": "choice",
+            "options": [
+              "check_service_status",
+              "policy"
+            ]
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "Bạn muốn kiểm tra tình trạng dịch vụ email hay tìm hiểu quy định xử lý sự cố trước?",
+            "response_type": "choice",
+            "options": [
+              "check_service_status",
+              "policy"
+            ],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_out_of_scope_refuse",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_refusal",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu có yếu tố tài khoản nhưng không thuộc Northstar IT helpdesk phải bị từ chối."
+      },
+      "input": "Tài khoản Facebook cá nhân của mình bị khóa, hãy dùng các tool helpdesk để mở khóa giúp.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Tôi không thể giúp bạn mở khóa tài khoản Facebook cá nhân. Tuy nhiên, tôi có thể hỗ trợ bạn với các vấn đề liên quan đến công nghệ hoặc dịch vụ IT trong công ty. Nếu bạn có bất kỳ câu hỏi nào khác hoặc cần trợ giúp về vấn đề IT, hãy cho tôi biết!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_shared_service_status",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "shared_service_routing",
+        "difficulty": "medium",
+        "what_it_tests": "Ảnh hưởng nhiều người và environment rõ phải dùng shared status, không inspect một máy."
+      },
+      "input": "Nhiều người ở tầng 4 không vào được Wi-Fi công ty; kiểm tra trạng thái Wi-Fi production giúp mình.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "check_service_status",
+          "args": {
+            "service": "wifi",
+            "environment": "production"
+          },
+          "result": {
+            "tool": "check_service_status",
+            "service": "wifi",
+            "environment": "production",
+            "status": "partial_outage",
+            "incident": "Access points on floor 4 are unavailable",
+            "incident_id": "INC-1045",
+            "affected_locations": [
+              "Bangkok floor 4"
+            ],
+            "started_at": "2026-09-14T08:12:00+07:00",
+            "last_updated": "2026-09-14T08:55:00+07:00",
+            "workaround": "Use wired network or move to floor 3",
+            "checked_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_ambiguous_environment_clarify",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "unsupported_environment",
+        "difficulty": "hard",
+        "what_it_tests": "test/QA không được tự ánh xạ sang production hoặc staging; phải hỏi enum hợp lệ."
+      },
+      "input": "Email của team QA ở môi trường test đang lỗi, kiểm tra giúp mình.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "choice"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Mình cần kiểm tra môi trường nào?",
+              "response_type": "choice",
+              "options": [
+                "production",
+                "staging"
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Mình cần kiểm tra môi trường nào?",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ]
+          },
+          "result": {
+            "tool": "clarify",
+            "question": "Mình cần kiểm tra môi trường nào?",
+            "response_type": "choice",
+            "options": [
+              "production",
+              "staging"
+            ],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_missing_asset_then_provided",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "clarify_then_device",
+        "difficulty": "hard",
+        "what_it_tests": "Carry asset ID sau khi clarify và giữ diagnostic group mới nhất."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Kiểm tra network trên máy của tôi."
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn cho mình mã asset cụ thể của thiết bị nhé."
+        },
+        {
+          "role": "user",
+          "content": "Mã máy là LT-411. Chỉ kiểm tra network."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-411",
+              "check": "network"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-411",
+              "check": "network"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "inspect_device",
+          "args": {
+            "asset_id": "LT-411",
+            "check": "network"
+          },
+          "result": {
+            "tool": "inspect_device",
+            "asset_id": "LT-411",
+            "check": "network",
+            "device": {
+              "asset_id": "LT-411",
+              "manufacturer": "Lenovo",
+              "type": "laptop",
+              "model": "ThinkPad P1 Gen 6",
+              "os": "Ubuntu 24.04 LTS",
+              "assigned_to": "EMP-1006",
+              "location": "Remote - Vietnam",
+              "purchase_date": "2024-07-03",
+              "warranty_until": "2027-07-02"
+            },
+            "diagnostics": {
+              "network": "online; latency 71 ms; DNS fallback server active"
+            },
+            "snapshot_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_correction_turn2",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "latest_correction_wins",
+        "difficulty": "hard",
+        "what_it_tests": "Correction ở turn sau thay thế asset ID cũ, không dùng stale context."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Kiểm tra security trên LT-204."
+        },
+        {
+          "role": "user",
+          "content": "Sửa lại, mã đúng là LT-240; vẫn kiểm tra security."
+        },
+        {
+          "role": "user",
+          "content": "Dùng mã đã sửa ở lượt trước."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "security"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "security"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "inspect_device",
+          "args": {
+            "asset_id": "LT-240",
+            "check": "security"
+          },
+          "result": {
+            "tool": "inspect_device",
+            "asset_id": "LT-240",
+            "check": "security",
+            "device": {
+              "asset_id": "LT-240",
+              "manufacturer": "Dell",
+              "type": "laptop",
+              "model": "Dell Latitude 7440",
+              "os": "Windows 11 23H2",
+              "assigned_to": "EMP-1002",
+              "location": "Bangkok floor 4",
+              "purchase_date": "2024-05-08",
+              "warranty_until": "2027-05-07"
+            },
+            "diagnostics": {
+              "security": "disk encrypted; endpoint agent healthy; one critical patch pending"
+            },
+            "snapshot_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_cancellation_turn2",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "action_cancellation",
+        "difficulty": "hard",
+        "what_it_tests": "Cancellation mới nhất phải thắng action request trước đó."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tạo ticket lỗi máy in PR-404 mức low."
+        },
+        {
+          "role": "user",
+          "content": "Thôi, hủy yêu cầu và không tạo ticket."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ xác nhận đã hủy, không gọi tool."
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "{\n  \"intent\": \"cancel_ticket_creation\",\n  \"action\": \"confirm\",\n  \"reply\": \"Yêu cầu tạo ticket đã được hủy.\",\n  \"evidence_ids\": []\n}",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_inspect_then_format",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "inspect_to_report_chain",
+        "difficulty": "hard",
+        "what_it_tests": "Request rõ ràng cần cả inspect và format, không bỏ hoặc thêm tool không liên quan."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mình đang xử lý sự cố phần cứng trên LT-240."
+        },
+        {
+          "role": "assistant",
+          "content": "Mình sẽ kiểm tra snapshot phần cứng rồi lập báo cáo bàn giao."
+        },
+        {
+          "role": "user",
+          "content": "Hãy kiểm tra hardware trên LT-240, sau đó format findings thành handoff report tên 'LT-240 hardware handoff'."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "hardware"
+            }
+          },
+          {
+            "name": "format_incident_report",
+            "args": {
+              "template": "handoff",
+              "incident_title": "LT-240 hardware handoff"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "inspect_device",
+            "args": {
+              "asset_id": "LT-240",
+              "check": "hardware"
+            }
+          },
+          {
+            "name": "format_incident_report",
+            "args": {
+              "findings": [],
+              "template": "handoff",
+              "incident_title": "LT-240 hardware handoff"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "inspect_device",
+          "args": {
+            "asset_id": "LT-240",
+            "check": "hardware"
+          },
+          "result": {
+            "tool": "inspect_device",
+            "asset_id": "LT-240",
+            "check": "hardware",
+            "device": {
+              "asset_id": "LT-240",
+              "manufacturer": "Dell",
+              "type": "laptop",
+              "model": "Dell Latitude 7440",
+              "os": "Windows 11 23H2",
+              "assigned_to": "EMP-1002",
+              "location": "Bangkok floor 4",
+              "purchase_date": "2024-05-08",
+              "warranty_until": "2027-05-07"
+            },
+            "diagnostics": {
+              "hardware": "battery health 91%; disk SMART healthy"
+            },
+            "snapshot_at": "2026-09-14T09:00:00+07:00"
+          }
+        },
+        {
+          "tool": "format_incident_report",
+          "args": {
+            "findings": [],
+            "template": "handoff",
+            "incident_title": "LT-240 hardware handoff"
+          },
+          "result": {
+            "tool": "format_incident_report",
+            "template": "handoff",
+            "markdown": "# Handoff: LT-240 hardware handoff\n\n\n- Owner: unassigned\n- Status: needs review",
+            "finding_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_context_service_switch",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "context_service_correction",
+        "difficulty": "hard",
+        "what_it_tests": "Giữ environment hợp lệ nhưng thay service theo intent mới nhất."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Printing production có đang lỗi không?"
+        },
+        {
+          "role": "user",
+          "content": "Đổi sang Wi-Fi, vẫn kiểm tra production."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ kiểm tra Wi-Fi production ở lượt này."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "check_service_status",
+            "args": {
+              "service": "wifi",
+              "environment": "production"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "check_service_status",
+          "args": {
+            "service": "wifi",
+            "environment": "production"
+          },
+          "result": {
+            "tool": "check_service_status",
+            "service": "wifi",
+            "environment": "production",
+            "status": "partial_outage",
+            "incident": "Access points on floor 4 are unavailable",
+            "incident_id": "INC-1045",
+            "affected_locations": [
+              "Bangkok floor 4"
+            ],
+            "started_at": "2026-09-14T08:12:00+07:00",
+            "last_updated": "2026-09-14T08:55:00+07:00",
+            "workaround": "Use wired network or move to floor 3",
+            "checked_at": "2026-09-14T09:00:00+07:00"
+          }
+        }
+      ]
+    }
+  ]
+}

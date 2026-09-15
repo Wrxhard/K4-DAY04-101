@@ -286,7 +286,7 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
   regression tests sớm hơn, thống nhất ownership/name/MSSV ngay đầu dự án, và
   thiết kế confirmation state do ứng dụng sở hữu thay vì tin boolean do model sinh.
 
-### Lại Bá Quân (`vxtor012`) — MSSV: 02495
+### Lại Bá Quân (`vxtor012`) — MSSV: 2A202602495
 
 - **Vai trò/phần việc được nhận:** Thiết kế và hiện thực hóa Bonus Tool `approved_software_catalog` cho hệ sinh thái IT Helpdesk Agent; thiết lập metadata, schema và dữ liệu mock.
 - **Những gì tôi đã thay đổi trong repo chung:**
@@ -306,26 +306,13 @@ dụng sở hữu và bổ sung regression/security tests riêng cho bonus tool.
 - **Điều tôi học được từ phần việc này:** Hiểu rõ cách Agent tương tác với Tool Calling Interface: cách đặt tên (`name`), viết mô tả (`description`) và các kiểu tham số (`parameters`) trong `tools.yaml` quyết định trực tiếp việc LLM có trích xuất đúng ý định của người dùng hay không.
 - **Nếu làm lại, tôi sẽ cải thiện điều gì:** Bổ sung trường lọc theo trạng thái chính sách (chỉ lọc phần mềm `status: approved` hoặc cảnh báo ngay khi gặp phần mềm `status: prohibited`) trực tiếp trong logic trả về của tool để phản hồi cho người dùng dứt khoát và an toàn hơn.
 
-### Nguyễn Văn Huy (`HuyHaiThanh`) — MSSV: 2A202602428
-
-- **Vai trò/phần việc được nhận:** Tôi phụ trách xây dựng Streamlit UI, chuẩn bị kịch bản demo, kiểm tra luồng chat và tổng hợp evidence UI vào báo cáo chung.
-- **Những gì tôi đã thay đổi trong repo chung:** Tôi xây dựng giao diện chat trong `app.py`, sau đó tích hợp giao diện với runtime `run_model_tool_loop` có sẵn. Tôi bổ sung phần hiển thị tool name, arguments, result/error, trạng thái xử lý, artifact version, prompt/tools hash và chức năng lưu hoặc tải transcript. Tôi cũng viết bộ regression test cho UI, script chạy năm live-demo scenario và cập nhật tài liệu demo/report từ kết quả quan sát thực tế.
-- **File hoặc artifact liên quan:** `starter_v0/app.py`, `starter_v0/requirements.txt`, `starter_v0/UI-README.md`, `starter_v0/DEMO-GUIDE.md`, `starter_v0/scripts/check_ui_demo.py`, `starter_v0/ui_tests/test_streamlit_app.py`, `starter_v0/artifacts/evidence/ui/` và `starter_v0/artifacts/REPORT.md`.
-- **Commit hash hoặc pull request:** `5ac8180`, `ad85edc`, `6e52a49`, `d896b7e` và PR #4. Run mới tại `starter_v0/artifacts/evidence/ui/live_20260915T102638/` chưa có commit tương ứng nên commit hash hiện là `TBD`.
-- **Một quyết định kỹ thuật tôi đã đưa ra và lý do:** Tôi chọn tái sử dụng trực tiếp `run_model_tool_loop` của ứng dụng thay vì viết một agent loop riêng cho UI. Tôi cũng giữ nguyên raw response và tool trace trong transcript. Cách này giúp giao diện phản ánh đúng hành vi thực tế của artifact/model và cho phép người review đối chiếu kết quả thay vì dựa vào phần trình bày của UI.
-- **Khó khăn tôi gặp và cách tôi xử lý:** Trong lần chạy ban đầu, model hỏi bổ sung thông tin bằng prose thay vì gọi `clarify`, khiến UI ghi trạng thái `answered` dù nội dung thực tế đang chờ người dùng. Tôi giữ lại run lỗi làm evidence, bổ sung checker phân biệt `answered`, `waiting_for_user`, `provider_error` và `max_tool_rounds`, rồi chạy lại năm scenario. Run mới đạt 5/5 về tool/status behavior và không có application exception; JSON response contract vẫn không đạt và được ghi rõ trong report.
-- **Điều tôi học được từ phần việc này:** Tôi nhận thấy một UI cho agent cần hiển thị cả quá trình tool calling, arguments, result/error, version và transcript. Chỉ hiển thị câu trả lời cuối không đủ để đánh giá routing, context carry-over hoặc safety boundary.
-- **Nếu làm lại, tôi sẽ cải thiện điều gì:** Tôi sẽ chốt artifact cuối trước khi tạo live evidence, tự động kiểm tra hash giữa transcript và report, lưu kết quả regression thành artifact có thể đối chiếu, đồng thời tách riêng tiêu chí tool/status behavior và JSON response contract để tránh hiểu nhầm một phần PASS là toàn bộ agent đã PASS.
-
-Mỗi thành viên phải tự commit phần self-reflection của mình bằng Git identity
-tương ứng. Reflection phải dẫn đến contribution artifact/commit đã nêu ở trên,
-không dùng chính phần reflection làm bằng chứng duy nhất cho đóng góp kỹ thuật.
-
 > Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
 > Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
 > các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
-## C3. Final checkout
+> Các thành viên B, C và D vẫn phải tự viết và commit self-reflection của mình bằng
+> Git identity tương ứng. Reflection của E được giữ từ các commit do E đưa lên `main`;
+> các claim về test được hiệu chỉnh theo artifact thực tế sau merge.
 
 - [x] `TEAMMATES.md` có đủ họ tên, MSSV, GitHub username và vai trò.
 - [x] Mỗi thành viên có ít nhất một commit trong lịch sử branch nộp bài.
